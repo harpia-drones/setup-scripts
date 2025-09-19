@@ -2,16 +2,20 @@
 
 # Check if terminal supports colors
 if [[ -t 1 ]] && command -v tput >/dev/null 2>&1 && tput colors >/dev/null 2>&1; then
-    GREEN='\033[0;32m'
-    YELLOW='\033[1;33m'
-    RED='\033[0;31m'
-    NC='\033[0m'
+	CYAN='\033[1;36m'      # For progress updates	
+	YELLOW='\033[1;33m'    # For warnings
+	WHITE='\033[1;37m'     # For information
+	GREEN='\033[1;32m'     # For success messages
+	RED='\033[1;31m'       # For errors
+	NC='\033[0m'           # No color (reset)
 else
     # No colors if terminal doesn't support them
-    GREEN=''
-    YELLOW=''
-    RED=''
-    NC=''
+    CYAN=''
+	YELLOW=''
+	WHITE=''
+	GREEN=''
+	RED=''
+	NC=''
 fi
 
 # Ensure the script is run as root
@@ -23,12 +27,16 @@ fi
 echo "Starting Ubuntu setup..."
 
 update_system() {
-	echo -e "${GREEN}Updating and upgrading package list...${NC}"
-	apt-get update && apt-get upgrade -y
+	echo -e "${CYAN}Updating and upgrading package list...${NC}"
+	if apt-get update && apt-get upgrade -y; then
+		echo -e "${GREEN}Package list updated and upgraded successfully${NC}"
+	else
+		echo -e "${RED}Failed to update or upgrade packages${NC}"
+	fi
 }
 
 install_essentials(){
-	echo -e "${GREEN}Installing essential packages...${NC}"
+	echo -e "${CYAN}Installing essential packages...${NC}"
 	local PACKAGES=(
 		neovim
 		git
@@ -44,14 +52,14 @@ install_essentials(){
 }
 
 install_snaps(){
-	echo -e "${GREEN}Installing applications from the Snap Store...${NC}"	
+	echo -e "${CYAN}Installing applications from the Snap Store...${NC}"	
 	snap install --classic code
 	#snap install spotify
 	snap install discord
 }
 
 install_docker(){
-	echo -e "${GREEN}Installing Docker Engine...${NC}"
+	echo -e "${CYAN}Installing Docker Engine...${NC}"
 	# 1. Set up Docker's apt repository.
 	
 	# Add Docker's official GPG key:
@@ -74,9 +82,9 @@ install_docker(){
 
 configure_docker_permissions(){
     if [ -n "$SUDO_USER" ]; then
-        echo -e "${GREEN}Adding user '$SUDO_USER' to the docker group...${NC}"
+        echo -e "${CYAN}Adding user '$SUDO_USER' to the docker group...${NC}"
         usermod -aG docker "$SUDO_USER"
-        echo -e "${GREEN}Configuring automatic GUI access for user '$SUDO_USER'...${NC}"
+        echo -e "${CYAN}Configuring automatic GUI access for user '$SUDO_USER'...${NC}"
         
         local LINE_TO_ADD="xhost +local:"
         local USER_BASHRC="/home/$SUDO_USER/.bashrc"
@@ -85,7 +93,7 @@ configure_docker_permissions(){
         if [[ -f "$USER_BASHRC" ]]; then
             if ! grep -Fxq "$LINE_TO_ADD" "$USER_BASHRC"; then
                 echo "$LINE_TO_ADD" >> "$USER_BASHRC"
-                echo -e "${GREEN}✓ Added Docker X11 forwarding to .bashrc${NC}"
+                echo -e "${GREEN}Added Docker X11 forwarding to .bashrc${NC}"
             else
                 echo -e "${YELLOW}Docker X11 forwarding already configured${NC}"
             fi
@@ -106,7 +114,7 @@ configure_docker_permissions
 install_snaps
 
 echo -e "${GREEN}All Done.${NC}"
-echo -e "${YELLOW}========================================${NC}"
-echo -e "${YELLOW}IMPORTANT: Please reboot or log out and log back in${NC}"
-echo -e "${YELLOW}to apply Docker group permissions.${NC}"
-echo -e "${YELLOW}========================================${NC}"
+echo -e "${WHITE}====================================================${NC}"
+echo -e "${CYAN}IMPORTANT:${WHITE} Please reboot or log out and log back in${NC}"
+echo -e "${WHITE}to apply Docker group permissions.${NC}"
+echo -e "${WHITE}====================================================${NC}"
