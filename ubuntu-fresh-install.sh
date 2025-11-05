@@ -42,6 +42,7 @@ install_essentials(){
 		git
 		gh
 		curl
+		x11-xserver-utils
 	)
 
 	if apt-get install -y "${PACKAGES[@]}"; then
