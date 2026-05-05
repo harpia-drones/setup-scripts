@@ -7,7 +7,7 @@ Quick setup scripts for our team's Ubuntu development environment.
 ```bash
 git clone https://github.com/harpia-drones/setup-scripts.git
 cd setup-scripts
-sudo ./ubuntu-fresh-setup.sh
+sudo ./ubuntu-fresh-install.sh
 ```
 
 **Important:** Reboot after running the script to use Docker without sudo.
