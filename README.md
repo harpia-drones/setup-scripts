@@ -5,7 +5,7 @@ Quick setup scripts for our team's Ubuntu development environment.
 ## Quick Start
 
 ```bash
-git clone git@github.com:harpia-drones/setup-scripts.git
+git clone https://github.com/harpia-drones/setup-scripts.git
 cd setup-scripts
 sudo ./ubuntu-fresh-setup.sh
 ```
