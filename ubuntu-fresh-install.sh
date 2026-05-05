@@ -87,7 +87,7 @@ configure_docker_permissions(){
         usermod -aG docker "$SUDO_USER"
         echo -e "${CYAN}Configuring automatic GUI access for user '$SUDO_USER'...${NC}"
         
-        local LINE_TO_ADD="xhost +local:docker"
+        local LINE_TO_ADD="xhost +local:docker > /dev/null"
         local USER_BASHRC="/home/$SUDO_USER/.bashrc"
         
         # Direct approach - no subshell needed
