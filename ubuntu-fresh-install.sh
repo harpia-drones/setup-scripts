@@ -20,23 +20,23 @@ fi
 
 # Ensure the script is run as root
 if [[ $EUID -ne 0 ]]; then
-	echo -e "${RED}This script must be run as root. Please use sudo.${NC}"
+	echo -e "${RED}Este script deve ser executado como root. Por favor, use sudo.${NC}"
 	exit 1
 fi
 
-echo "Starting Ubuntu setup..."
+echo "Iniciando configuração do Ubuntu..."
 
 update_system() {
-	echo -e "${CYAN}Updating and upgrading package list...${NC}"
+	echo -e "${CYAN}Atualizando e fazendo upgrade da lista de pacotes...${NC}"
 	if apt-get update && apt-get upgrade -y; then
-		echo -e "${GREEN}Package list updated and upgraded successfully${NC}"
+		echo -e "${GREEN}Lista de pacotes atualizada com sucesso${NC}"
 	else
-		echo -e "${RED}Failed to update or upgrade packages${NC}"
+		echo -e "${RED}Falha ao atualizar os pacotes${NC}"
 	fi
 }
 
 install_essentials(){
-	echo -e "${CYAN}Installing essential packages...${NC}"
+	echo -e "${CYAN}Instalando pacotes essenciais...${NC}"
 	local PACKAGES=(
 		neovim
 		git
@@ -46,21 +46,21 @@ install_essentials(){
 	)
 
 	if apt-get install -y "${PACKAGES[@]}"; then
-		echo -e "${GREEN}Essential packages installed successfully${NC}"
+		echo -e "${GREEN}Pacotes essenciais instalados com sucesso${NC}"
 	else
-		echo -e "${RED}Failed to install some essential packages${NC}"
+		echo -e "${RED}Falha ao instalar alguns pacotes essenciais${NC}"
 	fi
 }
 
 install_snaps(){
-	echo -e "${CYAN}Installing applications from the Snap Store...${NC}"	
+	echo -e "${CYAN}Instalando aplicativos da Snap Store...${NC}"	
 	snap install --classic code
 	#snap install spotify
 	snap install discord
 }
 
 install_docker(){
-	echo -e "${CYAN}Installing Docker Engine...${NC}"
+	echo -e "${CYAN}Instalando o Docker Engine...${NC}"
 	# 1. Set up Docker's apt repository.
 	
 	# Add Docker's official GPG key:
@@ -83,9 +83,9 @@ install_docker(){
 
 configure_docker_permissions(){
     if [ -n "$SUDO_USER" ]; then
-        echo -e "${CYAN}Adding user '$SUDO_USER' to the docker group...${NC}"
+        echo -e "${CYAN}Adicionando o usuário '$SUDO_USER' ao grupo docker...${NC}"
         usermod -aG docker "$SUDO_USER"
-        echo -e "${CYAN}Configuring automatic GUI access for user '$SUDO_USER'...${NC}"
+        echo -e "${CYAN}Configurando acesso automático à interface gráfica para o usuário '$SUDO_USER'...${NC}"
         
         local LINE_TO_ADD="xhost +local:docker > /dev/null"
         local USER_BASHRC="/home/$SUDO_USER/.bashrc"
@@ -94,17 +94,17 @@ configure_docker_permissions(){
         if [[ -f "$USER_BASHRC" ]]; then
             if ! grep -Fxq "$LINE_TO_ADD" "$USER_BASHRC"; then
                 echo "$LINE_TO_ADD" >> "$USER_BASHRC"
-                echo -e "${GREEN}Added Docker X11 forwarding to .bashrc${NC}"
+                echo -e "${GREEN}Encaminhamento X11 do Docker adicionado ao .bashrc${NC}"
             else
-                echo -e "${YELLOW}Docker X11 forwarding already configured${NC}"
+                echo -e "${YELLOW}Encaminhamento X11 do Docker já configurado${NC}"
             fi
             # Ensure proper ownership
             chown "$SUDO_USER:$SUDO_USER" "$USER_BASHRC"
         else
-            echo -e "${YELLOW}Warning: .bashrc not found at $USER_BASHRC${NC}"
+            echo -e "${YELLOW}Aviso: .bashrc não encontrado em $USER_BASHRC${NC}"
         fi
     else
-        echo -e "${YELLOW}Warning: Could not determine original user for Docker configuration.${NC}" 
+        echo -e "${YELLOW}Aviso: Não foi possível determinar o usuário original para a configuração do Docker.${NC}" 
     fi
 }
 
@@ -114,8 +114,8 @@ install_docker
 configure_docker_permissions
 install_snaps
 
-echo -e "${GREEN}All Done.${NC}"
+echo -e "${GREEN}Tudo Pronto.${NC}"
 echo -e "${WHITE}====================================================${NC}"
-echo -e "${CYAN}IMPORTANT:${WHITE} Please reboot or log out and log back in${NC}"
-echo -e "${WHITE}to apply Docker group permissions.${NC}"
+echo -e "${CYAN}IMPORTANTE:${WHITE} Por favor, reinicie ou faça logout e login${NC}"
+echo -e "${WHITE}para aplicar as permissões do grupo Docker.${NC}"
 echo -e "${WHITE}====================================================${NC}"

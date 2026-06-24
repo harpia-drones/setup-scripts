@@ -1,8 +1,8 @@
-# Ubuntu Setup Scripts
+# Scripts de Configuração do Ubuntu
 
-Quick setup scripts for our team's Ubuntu development environment.
+Scripts rápidos para configurar o ambiente de desenvolvimento Ubuntu da nossa equipe.
 
-## Quick Start
+## Início Rápido
 
 ```bash
 git clone https://github.com/harpia-drones/setup-scripts.git
@@ -10,16 +10,16 @@ cd setup-scripts
 sudo ./ubuntu-fresh-install.sh
 ```
 
-**Important:** Reboot after running the script to use Docker without sudo.
+**Importante:** Reinicie o computador após executar o script para usar o Docker sem sudo.
 
-## What Gets Installed
+## O Que é Instalado
 
-- **Dev Tools:** Neovim, Git, GitHub CLI, curl
-- **Docker:** Complete Docker setup with GUI support
-- **Apps:** VS Code, Discord
+- **Ferramentas de Desenvolvimento:** Neovim, Git, GitHub CLI, curl
+- **Docker:** Configuração completa do Docker com suporte a interface gráfica
+- **Aplicativos:** VS Code, Discord
 
-## Usage
+## Uso
 
-1. Run on fresh Ubuntu install
-2. Script needs sudo permissions
-3. Reboot when finished
+1. Execute em uma instalação limpa do Ubuntu
+2. O script precisa de permissões sudo
+3. Reinicie o computador ao finalizar
